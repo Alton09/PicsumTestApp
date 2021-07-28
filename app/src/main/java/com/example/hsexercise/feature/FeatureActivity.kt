@@ -12,7 +12,7 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
     var repository: Repository? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // TODO Move repository construction to a static level
+        // TODO Move repository construction to a Dependency Injection framework
        val restClient = NetworkProvider.provideRestClient()
         val service = restClient.createRetrofitAdapter().create(FeatureNetworkDataSource::class.java)
         repository = Repository(service)
