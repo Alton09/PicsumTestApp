@@ -5,32 +5,43 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-class FeatureViewModel : ViewModel() {
+class FeatureViewModel(private val repository: Repository) : ViewModel() {
     private val TAG = "FeatureViewModel"
     private val mutableViewState: MutableLiveData<FeatureViewState> = MutableLiveData(FeatureViewState())
     val viewState: LiveData<FeatureViewState> = mutableViewState
 
-    class Factory :
-        ViewModelProvider.Factory {
+    class Factory(private val repository: Repository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>) = FeatureViewModel() as T
+        override fun <T : ViewModel> create(
+            modelClass: Class<T>,
+        ) = FeatureViewModel(repository) as T
     }
 
-
     fun getImages() {
-        // TODO
+        viewModelScope.launch {
+            updateState { it.copy(
+                isLoading = true
+            ) }
+            val pics = repository.getPics()
+            updateState { it.copy(
+                list = pics
+                )
+            }
+        }
     }
 
     private fun updateState(action: (oldState: FeatureViewState) -> FeatureViewState) {
         withState { currentState ->
             val newState = action(currentState)
             mutableViewState.value = newState
-            Log.d(TAG,"updateState = $currentState")
+            Log.d(TAG,"updateState = $newState")
         }
     }
 
-    private fun withState(action: (currentState: FeatureViewState) -> Unit) =
+    private fun <T> withState(action: (currentState: FeatureViewState) -> T) =
         // Force unwrap used since an initial view state is always set
         action(mutableViewState.value!!)
 }
