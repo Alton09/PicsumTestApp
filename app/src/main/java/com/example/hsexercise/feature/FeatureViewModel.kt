@@ -28,11 +28,13 @@ class FeatureViewModel(private val featureRepository: FeatureRepository) : ViewM
             try {
                 val pics = featureRepository.getPics()
                 updateState { it.copy(
-                    list = pics
+                    list = pics,
+                    isLoading = false,
+                    error = null
                     )
                 }
             } catch (e: Exception) {
-                updateState { it.copy(error = ErrorState.NetworkError) }
+                updateState { it.copy(error = ErrorState.NetworkError, isLoading = false) }
             }
         }
     }

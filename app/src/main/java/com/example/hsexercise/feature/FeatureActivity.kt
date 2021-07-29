@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.hsexercise.R
 import com.example.hsexercise.common.BaseActivity
 import com.example.hsexercise.common.NetworkProvider
@@ -13,7 +14,8 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
     override val viewModelClass = FeatureViewModel::class.java
     override val layoutResId = R.layout.activity_feature
     private var featureRepository: FeatureRepository? = null
-    private var featureAdapter: FeatureAdapter = FeatureAdapter()
+    private val featureAdapter: FeatureAdapter = FeatureAdapter()
+    private lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // TODO Move repository construction to a Dependency Injection framework
@@ -29,6 +31,10 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
         findViewById<RecyclerView>(R.id.pics_list).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = featureAdapter
+        }
+        refreshLayout = findViewById(R.id.refresh_layout)
+        refreshLayout.apply {
+            setOnRefreshListener { viewModel.getImages() }
         }
     }
 
@@ -47,5 +53,6 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
                 .setNeutralButton("Okay") { _,_ -> }
                 .show()
         }
+        refreshLayout.isRefreshing = featureViewState.isLoading
     }
 }
