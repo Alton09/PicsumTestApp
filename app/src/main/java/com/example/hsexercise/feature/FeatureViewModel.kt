@@ -21,13 +21,13 @@ class FeatureViewModel(private val featureRepository: FeatureRepository) : ViewM
         ) = FeatureViewModel(featureRepository) as T
     }
 
-    fun getImages() {
+    fun getImages(isRefresh: Boolean = false) {
         viewModelScope.launch {
             updateState { it.copy(
                 isLoading = true
             ) }
             try {
-                val pics = featureRepository.getPics()
+                val pics = featureRepository.getPics(isRefresh)
                 if(pics.isEmpty()) {
                    updateState { it.copy(
                        list = pics,

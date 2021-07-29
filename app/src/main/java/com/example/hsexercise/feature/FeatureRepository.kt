@@ -15,16 +15,18 @@ class FeatureRepository(
     private val coroutineScope: CoroutineContext = Dispatchers.IO
 ) {
 
-    suspend fun getPics(): List<FeatureModel> {
-        // TODO
-        // To update stale data in the database, store a timestamp to allow the app to fetch data at a future time
+    /*
+     Realized that updating the stale database data is actually pretty straight forward.
+     Simply update the database from the network if the user performs a swipe to refresh.
+     */
+    suspend fun getPics(isRefresh: Boolean): List<FeatureModel> {
         var result = dao.coGetAll()
         if(isNetworkConnected()) {
-            withContext(coroutineScope) {
+            if(isRefresh) {
+                result = updateDatabaseFromNetwork()
+            } else {
                 if(result.isEmpty()) {
-                    result = featureNetworkDataSource.getPics()
-                    dao.insertAll(result)
-                    result = dao.coGetAll()
+                    result = updateDatabaseFromNetwork()
                 }
             }
         }
@@ -35,5 +37,13 @@ class FeatureRepository(
     private fun isNetworkConnected(): Boolean {
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         return activeNetwork?.isConnectedOrConnecting == true
+    }
+
+    private suspend fun updateDatabaseFromNetwork(): List<FeatureModel> {
+        withContext(coroutineScope) {
+            val networkResult = featureNetworkDataSource.getPics()
+            dao.insertAll(networkResult)
+        }
+        return dao.coGetAll()
     }
 }

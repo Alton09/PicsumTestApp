@@ -39,7 +39,7 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
         }
         refreshLayout = findViewById(R.id.refresh_layout)
         refreshLayout.apply {
-            setOnRefreshListener { viewModel.getImages() }
+            setOnRefreshListener { viewModel.getImages(true) }
         }
     }
 
