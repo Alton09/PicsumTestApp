@@ -46,12 +46,23 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
 
     private fun renderViewStates(featureViewState: FeatureViewState) {
         featureAdapter.swap(featureViewState.list)
-        if(featureViewState.error != null) {
-            AlertDialog
-                .Builder(this)
-                .setMessage("A network error has occurred. Please check the network and try again.")
-                .setNeutralButton("Okay") { _,_ -> }
-                .show()
+        when (featureViewState.error) {
+            ErrorState.NetworkError ->
+                AlertDialog
+                    .Builder(this)
+                    // TODO Add string resources for these literals
+                    .setMessage("A network error has occurred. Please check the network and try again.")
+                    .setNeutralButton("Okay") { _,_ -> }
+                    .show()
+            ErrorState.EmptyListError -> {
+                AlertDialog
+                    .Builder(this)
+                    // TODO Add string resources for these literals
+                    .setMessage("There were no images to display. Please try again later")
+                    .setNeutralButton("Okay") { _,_ -> }
+                    .show()
+            }
+            null -> {}
         }
         refreshLayout.isRefreshing = featureViewState.isLoading
     }

@@ -10,4 +10,5 @@ data class FeatureViewState(
 
 sealed class ErrorState {
     object NetworkError: ErrorState()
+    object EmptyListError: ErrorState()
 }
