@@ -20,13 +20,12 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
         super.onCreate(savedInstanceState)
 
         viewModel.viewState.observe(this, { renderViewStates(it) })
-        viewModel.getImages()
     }
 
     override fun provideViewModelFactory() = FeatureViewModel.Factory(featureRepository!!)
 
     override fun onViewLoad(savedInstanceState: Bundle?) {
-        // todo: write code here
+        viewModel.getImages()
     }
 
     private fun renderViewStates(featureViewState: FeatureViewState) {
