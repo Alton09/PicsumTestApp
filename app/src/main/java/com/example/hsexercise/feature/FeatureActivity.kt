@@ -1,12 +1,15 @@
 package com.example.hsexercise.feature
 
 import android.app.AlertDialog
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.hsexercise.R
 import com.example.hsexercise.common.BaseActivity
+import com.example.hsexercise.common.DatabaseProvider
 import com.example.hsexercise.common.NetworkProvider
 
 class FeatureActivity : BaseActivity<FeatureViewModel>() {
@@ -18,10 +21,12 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
     private lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // TODO Move repository construction to a Dependency Injection framework
-       val restClient = NetworkProvider.provideRestClient()
+        // TODO Initialize and manage dependencies with a Dependency Injection framework
+        val restClient = NetworkProvider.provideRestClient()
         val service = restClient.createRetrofitAdapter().create(FeatureNetworkDataSource::class.java)
-        featureRepository = FeatureRepository(service)
+        val dao = DatabaseProvider.provideRoomDatabase(application).featureTableDao()
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        featureRepository = FeatureRepository(service, dao, cm)
 
         super.onCreate(savedInstanceState)
 

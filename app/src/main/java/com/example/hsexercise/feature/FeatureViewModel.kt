@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.hsexercise.feature.database.FeatureTableDao
 import kotlinx.coroutines.launch
 
 class FeatureViewModel(private val featureRepository: FeatureRepository) : ViewModel() {
