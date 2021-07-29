@@ -8,16 +8,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class FeatureViewModel(private val repository: Repository) : ViewModel() {
+class FeatureViewModel(private val featureRepository: FeatureRepository) : ViewModel() {
     private val TAG = "FeatureViewModel"
     private val mutableViewState: MutableLiveData<FeatureViewState> = MutableLiveData(FeatureViewState())
     val viewState: LiveData<FeatureViewState> = mutableViewState
 
-    class Factory(private val repository: Repository) : ViewModelProvider.Factory {
+    class Factory(private val featureRepository: FeatureRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(
             modelClass: Class<T>,
-        ) = FeatureViewModel(repository) as T
+        ) = FeatureViewModel(featureRepository) as T
     }
 
     fun getImages() {
@@ -25,7 +25,7 @@ class FeatureViewModel(private val repository: Repository) : ViewModel() {
             updateState { it.copy(
                 isLoading = true
             ) }
-            val pics = repository.getPics()
+            val pics = featureRepository.getPics()
             updateState { it.copy(
                 list = pics
                 )

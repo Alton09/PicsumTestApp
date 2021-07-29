@@ -2,7 +2,7 @@ package com.example.hsexercise.feature
 
 import com.example.hsexercise.feature.database.FeatureModel
 
-class Repository(
+class FeatureRepository(
     private val featureNetworkDataSource: FeatureNetworkDataSource,
 //    private val dao: FeatureTableDao
     ) {

@@ -9,22 +9,21 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
 
     override val viewModelClass = FeatureViewModel::class.java
     override val layoutResId = R.layout.activity_feature
-    var repository: Repository? = null
+    var featureRepository: FeatureRepository? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // TODO Move repository construction to a Dependency Injection framework
        val restClient = NetworkProvider.provideRestClient()
         val service = restClient.createRetrofitAdapter().create(FeatureNetworkDataSource::class.java)
-        repository = Repository(service)
+        featureRepository = FeatureRepository(service)
 
         super.onCreate(savedInstanceState)
-
 
         viewModel.viewState.observe(this, { renderViewStates(it) })
         viewModel.getImages()
     }
 
-    override fun provideViewModelFactory() = FeatureViewModel.Factory(repository!!)
+    override fun provideViewModelFactory() = FeatureViewModel.Factory(featureRepository!!)
 
     override fun onViewLoad(savedInstanceState: Bundle?) {
         // todo: write code here
