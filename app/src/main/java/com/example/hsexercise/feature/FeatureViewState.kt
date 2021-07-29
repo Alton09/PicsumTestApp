@@ -9,5 +9,5 @@ data class FeatureViewState(
 )
 
 sealed class ErrorState {
-    object NetworkError
+    object NetworkError: ErrorState()
 }

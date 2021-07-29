@@ -25,10 +25,14 @@ class FeatureViewModel(private val featureRepository: FeatureRepository) : ViewM
             updateState { it.copy(
                 isLoading = true
             ) }
-            val pics = featureRepository.getPics()
-            updateState { it.copy(
-                list = pics
-                )
+            try {
+                val pics = featureRepository.getPics()
+                updateState { it.copy(
+                    list = pics
+                    )
+                }
+            } catch (e: Exception) {
+                updateState { it.copy(error = ErrorState.NetworkError) }
             }
         }
     }

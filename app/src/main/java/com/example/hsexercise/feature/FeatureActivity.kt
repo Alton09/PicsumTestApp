@@ -1,5 +1,6 @@
 package com.example.hsexercise.feature
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,5 +40,12 @@ class FeatureActivity : BaseActivity<FeatureViewModel>() {
 
     private fun renderViewStates(featureViewState: FeatureViewState) {
         featureAdapter.swap(featureViewState.list)
+        if(featureViewState.error != null) {
+            AlertDialog
+                .Builder(this)
+                .setMessage("A network error has occurred. Please check the network and try again.")
+                .setNeutralButton("Okay") { _,_ -> }
+                .show()
+        }
     }
 }
