@@ -2,9 +2,11 @@ package com.example.hsexercise.feature
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.hsexercise.R
 import com.example.hsexercise.feature.database.FeatureModel
 
@@ -29,7 +31,12 @@ class FeatureAdapter: RecyclerView.Adapter<FeatureAdapter.FeatureViewHolder>() {
         holder.picItemView.apply {
             (getChildAt(0) as TextView).text = dataItem.author
             (getChildAt(1) as TextView).text = context.getString(R.string.dimensions, dataItem.width, dataItem.height)
-            // TODO Load image with glide
+            val imageView = (getChildAt(2) as ImageView)
+            Glide
+                .with(context)
+                .load(dataItem.url)
+                .centerCrop()
+                .into(imageView);
         }
     }
 
